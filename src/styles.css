@@ -1,1 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+    --md-primary-background: #6200EE;
+    --md-secondary-background: #03DAC6;
+    --md-primary-dark-background: #3700B3;
+    --md-secondary-dark-background: #018786;
+    --md-primary-foreground: #FFFFFF;
+    --md-secondary-foreground: #495057;
+}
+
+app-root {
+    height: 100%;
+}
+
+@font-face {
+    font-family: Roboto;
+    src: url('src/assets/fonts/Roboto/Roboto-Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: Indie Flower;
+    src: url('src/assets/fonts/Indie_Flower/IndieFlower-Regular.ttf') format('truetype');
+}
+
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    margin: 0;
+}

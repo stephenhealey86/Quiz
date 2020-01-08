@@ -1,13 +1,18 @@
 {
   "name": "quiz",
   "version": "0.0.0",
+  "main": "main.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "electron": "ng build --prod && electron .",
+    "package-app": "electron-packager . NetworkSetter --asar --icon ./src/assets/icon.ico",
+    "package-app-admin": "electron-packager . NetworkSetter --asar --icon ./src/assets/icon.ico --win32metadata.requested-execution-level=\"requireAdministrator\"",
+    "windows-store": "electron-windows-store --input-directory C:\\Users\\Stephen\\Documents\\Dev\\Electron\\NetworkSetter\\NetworkSetter-win32-x64 --output-directory C:\\Users\\Stephen\\Documents\\Dev\\Electron\\NetworkSetter\\windows-store --windows-kit \"C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\" --package-version 1.0.0.0 --package-name Quiz --package-display-name \"Quiz\" --publisher-display-name \"Stephen Healey\" --package-description \"Quiz app.\" --signtool-params /debug -a ./Resources --package-background-color #FFFFFF"
   },
   "private": true,
   "dependencies": {
@@ -19,6 +24,10 @@
     "@angular/platform-browser": "~8.2.11",
     "@angular/platform-browser-dynamic": "~8.2.11",
     "@angular/router": "~8.2.11",
+    "bootstrap": "^4.4.1",
+    "electron-settings": "^3.2.0",
+    "jquery": "^3.4.1",
+    "ngx-electron": "^2.2.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
@@ -28,10 +37,12 @@
     "@angular/cli": "~8.3.14",
     "@angular/compiler-cli": "~8.2.11",
     "@angular/language-service": "~8.2.11",
-    "@types/node": "~8.9.4",
+    "@fortawesome/fontawesome-free": "^5.12.0",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "~8.9.4",
     "codelyzer": "^5.0.0",
+    "electron": "^7.1.7",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.1.0",

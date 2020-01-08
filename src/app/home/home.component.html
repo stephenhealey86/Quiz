@@ -1,0 +1,13 @@
+<div class="m-5">
+  <button (click)="start()" *ngIf="!started">Start</button>
+  <div *ngIf="started && questions?.length > 0">
+    <p>Category: {{currentQuestion.category}}</p>
+    <p>Question: {{currentQuestion.question}}</p>
+    <span class="d-flex flex-column">
+      <button (click)="submitAnswer(currentQuestion.answerA.correct)"><p>A: {{currentQuestion.answerA.answer}}</p></button>
+      <button (click)="submitAnswer(currentQuestion.answerB.correct)"><p>A: {{currentQuestion.answerB.answer}}</p></button>
+      <button (click)="submitAnswer(currentQuestion.answerC.correct)"><p>A: {{currentQuestion.answerC.answer}}</p></button>
+      <button (click)="submitAnswer(currentQuestion.answerD.correct)"><p>A: {{currentQuestion.answerD.answer}}</p></button>
+    </span>
+    </div>
+</div>

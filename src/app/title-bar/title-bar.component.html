@@ -1,0 +1,20 @@
+<nav [ngClass]="{'TopCornersRounded': !windowIsMaximised}" class="windows-title">
+  <div class="d-flex w-100 align-items-center">
+    <span class="invisible d-flex win-btn-grp">
+      <button class="btn-windows"><i class="fas fa-window-minimize"></i></button>
+      <button class="btn-windows"></button>
+      <button class="btn-windows"><i class="fas fa-window-close"></i></button>
+    </span>
+    <span class="w-100 text-center">
+      <p class="m-0"><i style="font-size: 1.2rem;" class="fas fa-network-wired"></i> Network-Setter <i style="font-size: 1.2rem;" class="fas fa-network-wired"></i></p>
+    </span>
+    <span class="d-flex win-btn-grp">
+      <button (click)="minWindow()" class="btn-windows"><i class="fas fa-window-minimize"></i></button>
+      <button (click)="maxWindow()" class="btn-windows">
+        <i *ngIf="windowIsMaximised" class="fas fa-window-restore"></i>
+        <i *ngIf="!windowIsMaximised" class="fas fa-window-maximize"></i>
+      </button>
+      <button (click)="closeWindow()" class="btn-windows-close"><i class="fas fa-window-close"></i></button>
+    </span>
+  </div>
+</nav>
