@@ -46,7 +46,8 @@ private getElectronSettings(): AppSettingsModel {
 
 private seedSettings(): AppSettingsModel {
   return {
-    token: null
+    token: null,
+    highScore: 0
   };
 }
 

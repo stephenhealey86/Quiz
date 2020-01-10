@@ -1,13 +1,70 @@
-<div class="m-5">
-  <button (click)="start()" *ngIf="!started">Start</button>
-  <div *ngIf="started && questions?.length > 0">
-    <p>Category: {{currentQuestion.category}}</p>
-    <p>Question: {{currentQuestion.question}}</p>
-    <span class="d-flex flex-column">
-      <button (click)="submitAnswer(currentQuestion.answerA.correct)"><p>A: {{currentQuestion.answerA.answer}}</p></button>
-      <button (click)="submitAnswer(currentQuestion.answerB.correct)"><p>A: {{currentQuestion.answerB.answer}}</p></button>
-      <button (click)="submitAnswer(currentQuestion.answerC.correct)"><p>A: {{currentQuestion.answerC.answer}}</p></button>
-      <button (click)="submitAnswer(currentQuestion.answerD.correct)"><p>A: {{currentQuestion.answerD.answer}}</p></button>
+<div style="height: 100%;" class="d-flex flex-column justify-content-center">
+
+  <div id="statsFrame" *ngIf="started && currentQuestion && !timesUp" class="d-flex justify-content-between">
+    <span id="score" class="d-flex px-2">
+      <p class="m-1">Score:</p>
+      <p class="m-1">{{score}}</p>
     </span>
+    <span id="timer" class="d-flex px-2">
+      <p class="m-1">Time:</p>
+      <p class="m-1">{{time}}</p>
+    </span>
+  </div>
+
+  <div id="questionFrame">
+    <!-- Start screen -->
+    <div *ngIf="!started || timesUp" class="d-flex flex-column justify-content-around align-items-center m-5">
+      <span id="highScore" class="d-flex">
+        <p class="m-1">{{timesUp ? "Score:" : "High Score"}}</p>
+        <p class="m-1">{{timesUp ? score : highScore}}</p>
+      </span>
+    <button class="btn btn-success p-5" *ngIf="!timesUp" (click)="start()"><i class="fas fa-play"></i></button>
+    <button class="btn btn-success p-5" *ngIf="timesUp" (click)="start()"><i class="fas fa-reply"></i></button>
     </div>
+
+    <div *ngIf="started && currentQuestion && !timesUp">
+      <!-- Questions -->
+      <span id="question">
+        <span class="d-flex mb-2">
+          <p class="m-1">Category:</p>
+          <p class="m-1" [innerHTML]="currentQuestion.category"></p>
+        </span>
+        <span class="d-flex mb-2">
+          <p class="m-1">Question:</p>
+          <p class="m-1" [innerHTML]="currentQuestion.question"></p>
+        </span>
+      </span>
+      <!-- Answers -->
+      <span id="answers" class="d-flex flex-column">
+        <button class="btn btn-primary" (click)="submitAnswer($event, currentQuestion.answerA.correct)">
+          <span class="d-flex">
+            <p class="m-1">A:</p>
+            <p class="m-1 flex-grow-1" [innerHTML]="currentQuestion.answerA.answer"></p>
+          </span>
+        </button>
+        <button class="btn btn-primary" (click)="submitAnswer($event, currentQuestion.answerB.correct)">
+          <span class="d-flex">
+            <p class="m-1">B:</p>
+            <p class="m-1 flex-grow-1" [innerHTML]="currentQuestion.answerB.answer"></p>
+          </span>
+        </button>
+        <button class="btn btn-primary" (click)="submitAnswer($event, currentQuestion.answerC.correct)">
+          <span class="d-flex">
+            <p class="m-1">C:</p>
+            <p class="m-1 flex-grow-1" [innerHTML]="currentQuestion.answerC.answer"></p>
+          </span>
+        </button>
+        <button class="btn btn-primary" (click)="submitAnswer($event, currentQuestion.answerD.correct)">
+          <span class="d-flex">
+            <p class="m-1">D:</p>
+            <p class="m-1 flex-grow-1" [innerHTML]="currentQuestion.answerD.answer"></p>
+          </span>
+        </button>
+      </span>
+      </div>
+  </div>
+</div>
+
+<div class="d-flex flex-wrap align-items-start" id="background">
+    <i *ngFor="let item of backgroundTile" class="fas fa-question"></i>
 </div>

@@ -13,9 +13,17 @@ import { QuizViewAnswer } from '../models/quiz-view-answer';
 })
 export class HomeComponent implements OnInit {
 
-  started: boolean = false;
+  backgroundTile = [];
+  started = false;
   questions: Array<QuizApiQuestion> = [];
-  score: number = 0;
+  score = 0;
+  time = 0;
+  highScore: number;
+  timerId: any;
+  gameLengthInSeconds = 2005;
+  timesUp = false;
+  newHighScore = false;
+  buttonsAreLocked = false;
   currentQuestion: QuizViewQuestion = null;
   private currentQuestionIndex = 0;
   private get token(): string {
@@ -25,8 +33,16 @@ export class HomeComponent implements OnInit {
   constructor(private settingsService: AppSettingsService, private questionService: QuestionService) { }
 
   ngOnInit() {
+    this.initaliseBackground();
     this.settingsService.getAppSettings();
     this.getToken();
+    this.highScore = this.settingsService.appSettings.highScore;
+  }
+
+  initaliseBackground(): void {
+    for (let i = 0; i < 3000; i++) {
+      this.backgroundTile.push(0);
+    }
   }
 
   private getToken(): void {
@@ -71,6 +87,8 @@ export class HomeComponent implements OnInit {
         .subscribe(res => {
           if (res.response_code === 0) {
             this.questions = res.results;
+            this.currentQuestionIndex = 0;
+            this.currentQuestion = this.calculateQuestion();
             return;
           }
           console.log(res.response_code);
@@ -79,16 +97,15 @@ export class HomeComponent implements OnInit {
   }
 
   getCurrentQuestion(): void {
-    if (this.questions.length > 0 && this.currentQuestionIndex <= this.questions.length) {
+    if (this.questions.length > 0 && this.currentQuestionIndex < this.questions.length) {
       this.currentQuestion = this.calculateQuestion();
     } else {
+      this.currentQuestion = null;
       this.getQuestions();
-      this.currentQuestionIndex = 0;
-      this.currentQuestion = this.calculateQuestion();
     }
   }
 
-  calculateQuestion(): QuizViewQuestion{
+  calculateQuestion(): QuizViewQuestion {
     const QUESTION = this.questions[this.currentQuestionIndex];
     const QUESTION_VIEW = {} as QuizViewQuestion;
     const ANSWERS = this.calculateAnswers(QUESTION);
@@ -126,24 +143,120 @@ export class HomeComponent implements OnInit {
 
     function shuffle(array: Array<QuizViewAnswer>) {
       for (let i = array.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
     }
   }
 
-  submitAnswer(correct: boolean): void {
-    if (correct) {
-      this.currentQuestionIndex++;
-      this.getCurrentQuestion();
-      this.score += 10;
-      console.log(this.score);
+  submitAnswer(event: MouseEvent, correct: boolean): void {
+    if (!this.buttonsAreLocked) {
+      this.buttonsAreLocked = true;
+      const ELEMENT = event.target as HTMLElement;
+      const BTN = ELEMENT.closest('button');
+      BTN.blur();
+      if (correct) {
+        this.calculateScore();
+        BTN.classList.remove('btn-primary');
+        BTN.classList.add('btn-success');
+        BTN.setAttribute('disabled', 'true');
+        setTimeout(() => {
+          this.currentQuestionIndex++;
+          this.getCurrentQuestion();
+          this.resetButtons();
+          this.buttonsAreLocked = false;
+        }, 1000);
+      } else {
+        setTimeout(() => {
+          this.buttonsAreLocked = false;
+          this.toggleLockedButtons();
+        }, 2000);
+        BTN.classList.remove('btn-primary');
+        BTN.classList.add('btn-danger');
+        BTN.setAttribute('disabled', 'true');
+        this.toggleLockedButtons();
+      }
+    } else {
+      this.wobbleButtons();
     }
+  }
+
+  resetButtons(): void {
+    const ELEMENTS = document.getElementsByClassName('btn');
+    if (ELEMENTS) {
+      const ARR = [].slice.call(ELEMENTS) as Array<HTMLButtonElement>;
+      ARR.forEach(btn => {
+        btn.classList.remove('btn-danger');
+        btn.classList.remove('btn-success');
+        btn.classList.add('btn-primary');
+        btn.removeAttribute('disabled');
+      });
+    }
+  }
+
+  toggleLockedButtons(): void {
+    if (!this.buttonsAreLocked) {
+      const ELEMENTS = document.getElementsByClassName('btn-locked');
+      const ARR = [].slice.call(ELEMENTS) as Array<HTMLButtonElement>;
+      ARR.forEach(btn => {
+        btn.classList.remove('btn-locked');
+      });
+    } else {
+      const ELEMENTS = document.getElementsByClassName('btn-primary');
+      const ARR = [].slice.call(ELEMENTS) as Array<HTMLButtonElement>;
+      ARR.forEach(btn => {
+        btn.classList.add('btn-locked');
+      });
+    }
+  }
+
+  wobbleButtons(): void {
+    const ELEMENTS = document.getElementsByClassName('btn');
+    if (ELEMENTS) {
+      const ARR = [].slice.call(ELEMENTS) as Array<HTMLButtonElement>;
+      ARR.forEach(btn => {
+        btn.animate([
+          // keyframes
+          { transform: 'translateX(-2px)' },
+          { transform: 'translateX(2px)' }
+        ], { 
+          // timing options
+          duration: 50,
+          iterations: 10
+        });
+      });
+    }
+  }
+
+  calculateScore(): void {
+    this.score += 10;
+    console.log(this.score);
   }
 
   start(): void {
     this.getCurrentQuestion();
     this.started = true;
+    this.timesUp = false;
+    this.newHighScore = false;
+    this.timerId = setInterval(() => {
+      this.gameTimer();
+    }, 1000);
+  }
+
+  gameTimer(): void {
+    if (this.time < this.gameLengthInSeconds) {
+      this.time++;
+      return;
+    }
+    clearInterval(this.timerId);
+    this.timesUp = true;
+    this.time = 0;
+    if (this.score > this.highScore) {
+      this.highScore = this.score;
+      this.settingsService.appSettings.highScore = this.score;
+      this.settingsService.saveAppSettings();
+      this.newHighScore = true;
+    }
   }
 
 }
