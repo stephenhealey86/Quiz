@@ -21,9 +21,20 @@
     box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.5);
 }
 
-#questionFrame, #score, #timer, #information {
+#information > p {
+    color: var(--md-primary-background);
+    font-size: 2vw;
+}
+
+#questionFrame, #score, #timer {
     background-color: rgba(255,255,255,0.75);
     border-radius: 25px;
+}
+
+#timer > p:nth-child(2), #score > p:nth-child(2) {
+    font-family: Nova Mono;
+    font-weight: 500;
+    transform: translateY(-0.3vh);
 }
 
 #background {
@@ -54,6 +65,17 @@
 button > i {
     font-size: 6vw;
 }
+
+.fa-spinner {
+    color: var(--md-primary-background);
+    font-size: 6vw;
+    animation-name: rotate;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+/* Repsonsiveness */
 
 @media screen and (min-width: 800px) {
     #questionFrame {
@@ -103,3 +125,21 @@ button > i {
         margin: 10px;
     }
 }
+
+/* animations */
+
+@keyframes rotate {
+    0% {
+      transform: rotate(0deg) scale(1);
+      opacity: 1;
+    }
+  
+    50% {
+        transform: rotate(180deg) scale(1.1);
+        opacity: 0.9;
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+        opacity: 1;
+    }
+  }

@@ -19,12 +19,17 @@ app-home {
 
 @font-face {
     font-family: Roboto;
-    src: url('src/assets/fonts/Roboto/Roboto-Medium.ttf') format('truetype');
+    src: url('src/assets/fonts/Roboto/Roboto-Regular.ttf') format('truetype');
 }
 
 @font-face {
     font-family: Indie Flower;
     src: url('src/assets/fonts/Indie_Flower/IndieFlower-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: Nova Mono;
+    src: url('src/assets/fonts/Nova_Mono/NovaMono-Regular.ttf') format('truetype');
 }
 
 html {

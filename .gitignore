@@ -44,3 +44,7 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Deployment
+/Quizzer-win32-x64
+/windows-store

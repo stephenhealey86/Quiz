@@ -7,15 +7,23 @@
     </span>
     <span id="timer" class="d-flex px-2">
       <p class="m-1">Time:</p>
-      <p class="m-1">{{time}}</p>
+      <p class="m-1">{{getFormattedTime()}}</p>
     </span>
   </div>
 
   <div id="questionFrame">
+    <!-- Loading screen -->
+    <div *ngIf="currentQuestion === null" class="d-flex flex-column justify-content-center align-items-center">
+      <i class="fas fa-spinner m-5"></i>
+      <span id="information" *ngIf="informationMessage">
+        <p class="m-1">{{informationMessage}}</p>
+      </span>
+    </div>
+
     <!-- Start screen -->
-    <div *ngIf="!started || timesUp" class="d-flex flex-column justify-content-around align-items-center m-5">
+    <div *ngIf="(!started || timesUp) && currentQuestion" class="d-flex flex-column justify-content-around align-items-center m-5">
       <span id="highScore" class="d-flex">
-        <p class="m-1">{{timesUp ? "Score:" : "High Score"}}</p>
+        <p class="m-1">{{timesUp ? "Score:" : "High Score:"}}</p>
         <p class="m-1">{{timesUp ? score : highScore}}</p>
       </span>
     <button class="btn btn-success p-5" *ngIf="!timesUp" (click)="start()"><i class="fas fa-play"></i></button>

@@ -20,10 +20,11 @@ export class HomeComponent implements OnInit {
   time = 0;
   highScore: number;
   timerId: any;
-  gameLengthInSeconds = 2005;
+  gameLengthInSeconds = 60;
   timesUp = false;
   newHighScore = false;
   buttonsAreLocked = false;
+  informationMessage: string = null;
   currentQuestion: QuizViewQuestion = null;
   private currentQuestionIndex = 0;
   private get token(): string {
@@ -36,7 +37,24 @@ export class HomeComponent implements OnInit {
     this.initaliseBackground();
     this.settingsService.getAppSettings();
     this.getToken();
-    this.highScore = this.settingsService.appSettings.highScore;
+    this.highScore = this.isNullOrUndefined(this.settingsService.appSettings.highScore) ? 0 : this.settingsService.appSettings.highScore;
+  }
+
+  getFormattedTime(): string {
+    if (this.time === 0) {
+      return '00';
+    } else if (this.time <= 9) {
+      return `0${this.time}`;
+    } else {
+      return this.time.toString();
+    }
+  }
+
+  isNullOrUndefined(value: any): boolean {
+    if (value !== null && value !== undefined) {
+      return false;
+    }
+    return true;
   }
 
   initaliseBackground(): void {
@@ -63,6 +81,8 @@ export class HomeComponent implements OnInit {
         }
         this.getNewToken();
       }, err => {
+        console.log('Renew Token Error');
+        console.log(err);
         this.getNewToken();
       });
   }
@@ -77,7 +97,12 @@ export class HomeComponent implements OnInit {
         }
         throwError('Invalid');
       }, err => {
-        this.settingsService.appSettings.token = err;
+        console.log('New Token Error');
+        console.log(err);
+        setTimeout(() => {
+          this.informationMessage = 'Problem with internet. Re-trying';
+          this.getNewToken();
+        }, 5000);
       });
   }
 
@@ -92,6 +117,13 @@ export class HomeComponent implements OnInit {
             return;
           }
           console.log(res.response_code);
+        }, err => {
+          console.log('Get Questions Error');
+          console.log(err);
+          setTimeout(() => {
+          this.informationMessage = 'Problem with internet. Re-trying';
+          this.getQuestions();
+        }, 5000);
         });
     }
   }
@@ -219,7 +251,7 @@ export class HomeComponent implements OnInit {
           // keyframes
           { transform: 'translateX(-2px)' },
           { transform: 'translateX(2px)' }
-        ], { 
+        ], {
           // timing options
           duration: 50,
           iterations: 10
@@ -235,6 +267,7 @@ export class HomeComponent implements OnInit {
 
   start(): void {
     this.getCurrentQuestion();
+    this.score = 0;
     this.started = true;
     this.timesUp = false;
     this.newHighScore = false;
@@ -249,6 +282,7 @@ export class HomeComponent implements OnInit {
       return;
     }
     clearInterval(this.timerId);
+    this.currentQuestionIndex++;
     this.timesUp = true;
     this.time = 0;
     if (this.score > this.highScore) {
