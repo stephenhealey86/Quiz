@@ -4,6 +4,10 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { HomeComponent } from './home.component';
+import { QuestionService } from '../services/question.service';
+import { AppSettingsService } from '../Services/app-settings.service';
+import { ElectronService } from 'ngx-electron';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -11,7 +15,17 @@ describe('HomeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HomeComponent ]
+      declarations: [
+        HomeComponent
+      ],
+      providers: [
+        ElectronService,
+        AppSettingsService,
+        QuestionService,
+      ],
+      imports: [
+        HttpClientModule
+     ]
     })
     .compileComponents();
   }));
@@ -20,6 +34,12 @@ describe('HomeComponent', () => {
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    if (fixture.nativeElement && 'remove' in fixture.nativeElement) {
+      (fixture.nativeElement as HTMLElement).remove();
+    }
   });
 
   it('should create', () => {

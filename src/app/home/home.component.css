@@ -75,6 +75,15 @@ button > i {
     animation-timing-function: linear;
 }
 
+.green-highlight {
+    color: green;
+    text-shadow: 0 0 0 0.2rem rgba(0, 255, 0, 0.5);
+    animation-name: greenHighlight;
+    animation-timing-function: linear;
+    animation-duration: 500ms;
+    animation-iteration-count: 2;
+}
+
 /* Repsonsiveness */
 
 @media screen and (min-width: 800px) {
@@ -143,3 +152,15 @@ button > i {
         opacity: 1;
     }
   }
+
+@keyframes greenHighlight {
+    0% {
+        transform: rotate(0deg) scale(1)
+    }
+    50% {
+        transform: rotate(180deg) scale(1.2)
+    }
+    100% {
+        transform: rotate(360deg) scale(1)
+    }
+}

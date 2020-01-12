@@ -30,14 +30,20 @@ getAppSettings(): void {
     this.appSettings = this.getWebAppSettings();
   }
   if (this.appIsNewVersion()) {
-    this.clearAppSettings();
-    this.seedSettings();
+    if (this.appSettings.highScore) {
+      const HIGH_SCORE = this.appSettings.highScore;
+      this.clearAppSettings();
+      this.seedSettings(HIGH_SCORE);
+    } else {
+      this.clearAppSettings();
+      this.seedSettings();
+    }
     this.saveAppSettings();
   }
 }
 
 // Returns true if running in production, Electron is assumed to be true when in production
-private isRunningInElectron(): boolean {
+isRunningInElectron(): boolean {
   return environment.production;
 }
 
@@ -50,12 +56,12 @@ private getElectronSettings(): AppSettingsModel {
   return this.seedSettings();
 }
 
-private seedSettings(): AppSettingsModel {
+private seedSettings(highScore?: number): AppSettingsModel {
   console.log('Seeding Settings');
   return {
-    version: '0.0.0.0',
+    version: this.isRunningInElectron() ? this.electronService.remote.app.getVersion() : version,
     token: null,
-    highScore: 0
+    highScore: highScore ? highScore : 0
   };
 }
 
@@ -89,7 +95,7 @@ private appIsNewVersion(): boolean {
   }
 }
 
-compareVersion(v1: any, v2: any): any {
+private compareVersion(v1: any, v2: any): any {
   if (typeof v1 !== 'string') { return false; }
   if (typeof v2 !== 'string') { return false; }
   v1 = v1.split('.');
@@ -113,7 +119,7 @@ saveAppSettings(): void {
   }
 }
 
-clearAppSettings(): void {
+private clearAppSettings(): void {
   console.log('Cleared Settings');
   if (this.isRunningInElectron()) {
     this.settings.delete(this.SETTINGS);

@@ -13,11 +13,13 @@ describe('TitleBarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TitleBarComponent ],
+      declarations: [
+        TitleBarComponent
+      ],
       providers: [
         AppSettingsService,
         ElectronService
-      ],
+      ]
     })
     .compileComponents();
   }));
@@ -26,6 +28,12 @@ describe('TitleBarComponent', () => {
     fixture = TestBed.createComponent(TitleBarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    if (fixture.nativeElement && 'remove' in fixture.nativeElement) {
+      (fixture.nativeElement as HTMLElement).remove();
+    }
   });
 
   it('should create', () => {

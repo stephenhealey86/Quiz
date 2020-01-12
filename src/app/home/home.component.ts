@@ -25,6 +25,8 @@ export class HomeComponent implements OnInit {
   newHighScore = false;
   buttonsAreLocked = false;
   informationMessage: string = null;
+  concurrentCorrectAnswers = 0;
+  numberOfWrongAnswersThisQuestion = 0;
   currentQuestion: QuizViewQuestion = null;
   private currentQuestionIndex = 0;
   private get token(): string {
@@ -50,14 +52,14 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  isNullOrUndefined(value: any): boolean {
+  private isNullOrUndefined(value: any): boolean {
     if (value !== null && value !== undefined) {
       return false;
     }
     return true;
   }
 
-  initaliseBackground(): void {
+  private initaliseBackground(): void {
     for (let i = 0; i < 3000; i++) {
       this.backgroundTile.push(0);
     }
@@ -106,9 +108,9 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  private async getQuestions(): Promise<void> {
+  private getQuestions(): void {
     if (this.token) {
-      await this.questionService.getQuestions(this.token)
+      this.questionService.getQuestions(this.token)
         .subscribe(res => {
           if (res.response_code === 0) {
             this.questions = res.results;
@@ -128,7 +130,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  getCurrentQuestion(): void {
+  private getCurrentQuestion(): void {
     if (this.questions.length > 0 && this.currentQuestionIndex < this.questions.length) {
       this.currentQuestion = this.calculateQuestion();
     } else {
@@ -137,7 +139,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  calculateQuestion(): QuizViewQuestion {
+  private calculateQuestion(): QuizViewQuestion {
     const QUESTION = this.questions[this.currentQuestionIndex];
     const QUESTION_VIEW = {} as QuizViewQuestion;
     const ANSWERS = this.calculateAnswers(QUESTION);
@@ -151,7 +153,7 @@ export class HomeComponent implements OnInit {
     return QUESTION_VIEW;
   }
 
-  calculateAnswers(question: QuizApiQuestion): Array<QuizViewAnswer> {
+  private calculateAnswers(question: QuizApiQuestion): Array<QuizViewAnswer> {
     const ARR = [
       {
         answer: question.correct_answer,
@@ -189,6 +191,8 @@ export class HomeComponent implements OnInit {
       BTN.blur();
       if (correct) {
         this.calculateScore();
+        this.concurrentCorrectAnswers++;
+        this.numberOfWrongAnswersThisQuestion = 0;
         BTN.classList.remove('btn-primary');
         BTN.classList.add('btn-success');
         BTN.setAttribute('disabled', 'true');
@@ -207,13 +211,15 @@ export class HomeComponent implements OnInit {
         BTN.classList.add('btn-danger');
         BTN.setAttribute('disabled', 'true');
         this.toggleLockedButtons();
+        this.concurrentCorrectAnswers = 0;
+        this.numberOfWrongAnswersThisQuestion++;
       }
     } else {
       this.wobbleButtons();
     }
   }
 
-  resetButtons(): void {
+  private resetButtons(): void {
     const ELEMENTS = document.getElementsByClassName('btn');
     if (ELEMENTS) {
       const ARR = [].slice.call(ELEMENTS) as Array<HTMLButtonElement>;
@@ -226,7 +232,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  toggleLockedButtons(): void {
+  private toggleLockedButtons(): void {
     if (!this.buttonsAreLocked) {
       const ELEMENTS = document.getElementsByClassName('btn-locked');
       const ARR = [].slice.call(ELEMENTS) as Array<HTMLButtonElement>;
@@ -242,7 +248,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  wobbleButtons(): void {
+  private wobbleButtons(): void {
     const ELEMENTS = document.getElementsByClassName('btn');
     if (ELEMENTS) {
       const ARR = [].slice.call(ELEMENTS) as Array<HTMLButtonElement>;
@@ -260,13 +266,25 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  calculateScore(): void {
-    this.score += 10;
+  private calculateScore(): void {
+    if (this.concurrentCorrectAnswers >= 3 && this.numberOfWrongAnswersThisQuestion === 0) {
+      const ELEMENT = document.getElementById('timerValue') as HTMLParagraphElement;
+      this.time += 5;
+      this.time = this.time > 60 ? 60 : this.time;
+      ELEMENT.classList.add('green-highlight');
+      setTimeout(() => {
+        ELEMENT.classList.remove('green-highlight');
+      }, 1000);
+    }
+    this.score += ((5 - this.numberOfWrongAnswersThisQuestion) + (this.concurrentCorrectAnswers * 5));
     console.log(this.score);
   }
 
   start(): void {
     this.getCurrentQuestion();
+    this.concurrentCorrectAnswers = 0;
+    this.numberOfWrongAnswersThisQuestion = 0;
+    this.time = this.gameLengthInSeconds;
     this.score = 0;
     this.started = true;
     this.timesUp = false;
@@ -276,9 +294,9 @@ export class HomeComponent implements OnInit {
     }, 1000);
   }
 
-  gameTimer(): void {
-    if (this.time < this.gameLengthInSeconds) {
-      this.time++;
+  private gameTimer(): void {
+    if (this.time > 0) {
+      this.time--;
       return;
     }
     clearInterval(this.timerId);
