@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, DoCheck } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { environment } from 'src/environments/environment';
 import { AppSettingsService } from '../Services/app-settings.service';
@@ -8,7 +8,7 @@ import { AppSettingsService } from '../Services/app-settings.service';
   templateUrl: './title-bar.component.html',
   styleUrls: ['./title-bar.component.css']
 })
-export class TitleBarComponent implements OnInit {
+export class TitleBarComponent implements OnInit, DoCheck {
 
   //#region Variables
   // Emits windowIsMaximized
@@ -22,9 +22,27 @@ export class TitleBarComponent implements OnInit {
   constructor(private electronService: ElectronService, private settings: AppSettingsService) { }
 
   ngOnInit() {
-    if (environment.production) {
+    if (this.isRunningInElectron()) {
       // Get electron window if running in electron
       this.window = this.electronService.remote.getCurrentWindow();
+      this.window.on('maximize', this.checkMaximizeIcon.bind(this));
+      this.window.on('unmaximize', this.checkMaximizeIcon.bind(this));
+    }
+  }
+
+  ngDoCheck(): void {
+    this.checkMaximizeIcon();
+  }
+
+  checkMaximizeIcon(): void {
+    if (this.isRunningInElectron()) {
+      if (this.window.isMaximized()) {
+        console.log(this);
+        this.windowIsMaximised = true;
+      } else {
+        console.log(this);
+        this.windowIsMaximised = false;
+      }
     }
   }
 
@@ -48,15 +66,25 @@ export class TitleBarComponent implements OnInit {
   }
 
   maxWindow(): void {
-    if (environment.production) {
+    if (this.isRunningInElectron()) {
       if (this.windowIsMaximised) {
         this.windowIsMaximised = false;
         this.emitWindowState();
         this.window.unmaximize();
+        console.log('Unmaximize window.');
       } else {
         this.windowIsMaximised = true;
         this.emitWindowState();
         this.window.maximize();
+        console.log('Maximize window.');
+      }
+    } else {
+      if (this.windowIsMaximised) {
+        this.windowIsMaximised = false;
+        console.log('Unmaximize window.');
+      } else {
+        this.windowIsMaximised = true;
+        console.log('Maximize window.');
       }
     }
   }
