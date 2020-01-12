@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, DoCheck } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, NgZone } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { environment } from 'src/environments/environment';
 import { AppSettingsService } from '../Services/app-settings.service';
@@ -8,7 +8,7 @@ import { AppSettingsService } from '../Services/app-settings.service';
   templateUrl: './title-bar.component.html',
   styleUrls: ['./title-bar.component.css']
 })
-export class TitleBarComponent implements OnInit, DoCheck {
+export class TitleBarComponent implements OnInit {
 
   //#region Variables
   // Emits windowIsMaximized
@@ -19,7 +19,7 @@ export class TitleBarComponent implements OnInit, DoCheck {
   window = {} as Electron.BrowserWindow;
   //#endregion
 
-  constructor(private electronService: ElectronService, private settings: AppSettingsService) { }
+  constructor(private electronService: ElectronService, private settings: AppSettingsService, private zone: NgZone) { }
 
   ngOnInit() {
     if (this.isRunningInElectron()) {
@@ -30,18 +30,16 @@ export class TitleBarComponent implements OnInit, DoCheck {
     }
   }
 
-  ngDoCheck(): void {
-    this.checkMaximizeIcon();
-  }
-
   checkMaximizeIcon(): void {
     if (this.isRunningInElectron()) {
       if (this.window.isMaximized()) {
-        console.log(this);
-        this.windowIsMaximised = true;
+        this.zone.run(() => {
+          this.windowIsMaximised = true;
+        });
       } else {
-        console.log(this);
-        this.windowIsMaximised = false;
+        this.zone.run(() => {
+          this.windowIsMaximised = false;
+        });
       }
     }
   }
