@@ -1,0 +1,8 @@
+* {
+    font-size: 3vh;
+    font-family: 'Indie Flower', cursive;
+}
+
+.table th, .table td {
+    padding: .5rem;
+}

@@ -5,6 +5,7 @@ import { throwError } from 'rxjs';
 import { QuizApiQuestion } from '../models/quiz-api-question';
 import { QuizViewQuestion } from '../models/quiz-view-question';
 import { QuizViewAnswer } from '../models/quiz-view-answer';
+import { HighScoreModel } from '../models/high-score-model';
 
 @Component({
   selector: 'app-home',
@@ -18,19 +19,22 @@ export class HomeComponent implements OnInit {
   questions: Array<QuizApiQuestion> = [];
   score = 0;
   time = 0;
-  highScore: number;
   timerId: any;
-  gameLengthInSeconds = 60;
+  private gameLengthInSeconds = 10;
   timesUp = false;
-  newHighScore = false;
   buttonsAreLocked = false;
   informationMessage: string = null;
-  concurrentCorrectAnswers = 0;
-  numberOfWrongAnswersThisQuestion = 0;
+  private concurrentCorrectAnswers = 0;
+  private numberOfWrongAnswersThisQuestion = 0;
   currentQuestion: QuizViewQuestion = null;
+  newHighScore: HighScoreModel;
   private currentQuestionIndex = 0;
   private get token(): string {
     return this.settingsService.appSettings.token;
+  }
+
+  get highScores(): Array<HighScoreModel> {
+    return this.settingsService.appSettings.highScores.sort((a, b) => (a.highScore > b.highScore) ? -1 : 1);
   }
 
   constructor(private settingsService: AppSettingsService, private questionService: QuestionService) { }
@@ -39,11 +43,10 @@ export class HomeComponent implements OnInit {
     this.initaliseBackground();
     this.settingsService.getAppSettings();
     this.getToken();
-    this.highScore = this.isNullOrUndefined(this.settingsService.appSettings.highScore) ? 0 : this.settingsService.appSettings.highScore;
   }
 
   getFormattedTime(): string {
-    if (this.time === 0) {
+    if (this.time === 0 || this.isNullOrUndefined(this.time)) {
       return '00';
     } else if (this.time <= 9) {
       return `0${this.time}`;
@@ -286,9 +289,9 @@ export class HomeComponent implements OnInit {
     this.numberOfWrongAnswersThisQuestion = 0;
     this.time = this.gameLengthInSeconds;
     this.score = 0;
+    this.newHighScore = undefined;
     this.started = true;
     this.timesUp = false;
-    this.newHighScore = false;
     this.timerId = setInterval(() => {
       this.gameTimer();
     }, 1000);
@@ -303,11 +306,42 @@ export class HomeComponent implements OnInit {
     this.currentQuestionIndex++;
     this.timesUp = true;
     this.time = 0;
-    if (this.score > this.highScore) {
-      this.highScore = this.score;
-      this.settingsService.appSettings.highScore = this.score;
+    if (this.isHighScore(this.score)) {
+      this.newHighScore = {
+        highScore: this.score,
+        date: new Date(Date.now()),
+        name: null
+      };
+    }
+  }
+
+  isHighScore(score: number): boolean {
+    if (this.score > 0) {
+      if (this.highScores.length > 9) {
+        this.highScores.forEach(highScore => {
+          if (score > highScore.highScore) {
+            return true;
+          }
+        });
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  saveHighScore(): void {
+    if (this.newHighScore.name !== null) {
+      const HIGH_SCORES = this.settingsService.appSettings.highScores;
+      HIGH_SCORES.push(this.newHighScore);
+      this.newHighScore = null;
+      HIGH_SCORES.sort(s => s.highScore);
+      for (let i = 0; i < HIGH_SCORES.length; i++) {
+        if (i >= 9) {
+          HIGH_SCORES.pop();
+        }
+      }
       this.settingsService.saveAppSettings();
-      this.newHighScore = true;
     }
   }
 

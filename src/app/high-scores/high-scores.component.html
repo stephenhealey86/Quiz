@@ -1,0 +1,36 @@
+<table class="table table-striped" *ngIf="topHighScores?.length > 0 || newHighScore !== undefined">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Score</th>
+      <th scope="col">Name</th>
+      <th scope="col">Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let score of topHighScores; let i = index;">
+      <th scope="row">{{i + 1}}</th>
+      <td>{{score.highScore}}</td>
+      <td>{{score.name}}</td>
+      <td>{{score.date | date: 'd/M/yy'}}</td>
+    </tr>
+    <tr *ngIf="newHighScore">
+    <td scope="row">{{newHighScoreIndex + 1}}</td>
+      <td>
+        <label class="m-1" for="name">{{newHighScore.highScore}}</label>
+      </td>
+      <td>
+        <input class="form-control m-1" name="name" #name="ngModel" type="text" [(ngModel)]="newHighScore.name" required maxlength="20" minlength="3">
+      </td>
+      <td>
+        <button (click)="saveHighScore()" class="btn btn-success m-1">Save</button>
+      </td>
+    </tr>
+    <tr *ngFor="let score of bottomHighScores; let i = index;">
+      <th scope="row">{{i + newHighScoreIndex + 2}}</th>
+      <td>{{score.highScore}}</td>
+      <td>{{score.name}}</td>
+      <td>{{score.date | date: 'd/M/yy'}}</td>
+    </tr>
+  </tbody>
+</table>

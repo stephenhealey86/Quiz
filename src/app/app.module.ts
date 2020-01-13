@@ -9,17 +9,22 @@ import { ElectronService } from 'ngx-electron';
 import { AppSettingsService } from './Services/app-settings.service';
 import { HttpClientModule } from '@angular/common/http';
 import { QuestionService } from './services/question.service';
+import { HighScoresComponent } from './high-scores/high-scores.component';
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
    declarations: [
       AppComponent,
       TitleBarComponent,
-      HomeComponent
+      HomeComponent,
+      HighScoresComponent
    ],
    imports: [
       BrowserModule,
       HttpClientModule,
-      AppRoutingModule
+      AppRoutingModule,
+      FormsModule
    ],
    providers: [
       ElectronService,

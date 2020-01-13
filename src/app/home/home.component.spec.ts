@@ -45,4 +45,23 @@ describe('HomeComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('getFormattedTime() should return the remaining seconds as two charater string', () => {
+    // Arrange
+    component.time = 0;
+    // Act & Assert
+    expect(component.getFormattedTime()).toEqual('00');
+    // Arrange
+    component.time = 9;
+    // Act & Assert
+    expect(component.getFormattedTime()).toEqual('09');
+    // Arrange
+    component.time = 10;
+    // Act & Assert
+    expect(component.getFormattedTime()).toEqual('10');
+    // Arrange
+    component.time = null;
+    // Act & Assert
+    expect(component.getFormattedTime()).toEqual('00');
+  });
 });

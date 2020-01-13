@@ -23,8 +23,7 @@
     <!-- Start screen -->
     <div *ngIf="(!started || timesUp) && currentQuestion" class="d-flex flex-column justify-content-around align-items-center m-5">
       <span id="highScore" class="d-flex">
-        <p class="m-1">{{timesUp ? "Score:" : "High Score:"}}</p>
-        <p class="m-1">{{timesUp ? score : highScore}}</p>
+        <app-high-scores [newHighScore]="newHighScore" [highScores]="highScores" (saveScore)="saveHighScore()"></app-high-scores>
       </span>
     <button class="btn btn-success p-5" *ngIf="!timesUp" (click)="start()"><i class="fas fa-play"></i></button>
     <button class="btn btn-success p-5" *ngIf="timesUp" (click)="start()"><i class="fas fa-reply"></i></button>

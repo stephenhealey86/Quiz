@@ -4,6 +4,7 @@ import { ElectronService } from 'ngx-electron';
 import * as settings from 'electron-settings';
 import { AppSettingsModel } from '../models/app-settings-model';
 import { version } from 'package.json';
+import { HighScoreModel } from '../models/high-score-model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,10 +31,10 @@ getAppSettings(): void {
     this.appSettings = this.getWebAppSettings();
   }
   if (this.appIsNewVersion()) {
-    if (this.appSettings.highScore) {
-      const HIGH_SCORE = this.appSettings.highScore;
+    if (this.appSettings.highScores) {
+      const HIGH_SCORES = this.appSettings.highScores;
       this.clearAppSettings();
-      this.seedSettings(HIGH_SCORE);
+      this.seedSettings(HIGH_SCORES);
     } else {
       this.clearAppSettings();
       this.seedSettings();
@@ -56,12 +57,12 @@ private getElectronSettings(): AppSettingsModel {
   return this.seedSettings();
 }
 
-private seedSettings(highScore?: number): AppSettingsModel {
+private seedSettings(highScore?: Array<HighScoreModel>): AppSettingsModel {
   console.log('Seeding Settings');
   return {
     version: this.isRunningInElectron() ? this.electronService.remote.app.getVersion() : version,
     token: null,
-    highScore: highScore ? highScore : 0
+    highScores: highScore ? highScore : []
   };
 }
 

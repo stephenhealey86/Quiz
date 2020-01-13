@@ -1,5 +1,7 @@
+import { HighScoreModel } from './high-score-model';
+
 export interface AppSettingsModel {
     version: string;
     token: string;
-    highScore: number;
+    highScores: Array<HighScoreModel>;
 }
