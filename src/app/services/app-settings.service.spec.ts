@@ -31,7 +31,7 @@ describe('Service: AppSettings', () => {
     const SETTINGS_KEY = 'quizSettingsApp';
     localStorage.removeItem(SETTINGS_KEY);
     const SETTINGS = {
-      highScore: 100,
+      highScores: [],
       token: 'Testing',
       version: '1.1.1'
     } as AppSettingsModel;
@@ -47,7 +47,7 @@ describe('Service: AppSettings', () => {
     const SETTINGS_KEY = 'quizSettingsApp';
     localStorage.removeItem(SETTINGS_KEY);
     const SETTINGS = {
-      highScore: 0,
+      highScores: [],
       token: null,
       version: version.toString()
     } as AppSettingsModel;

@@ -4,17 +4,21 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { TitleBarComponent } from './title-bar/title-bar.component';
 import { ElectronService } from 'ngx-electron';
+import { HighScoresComponent } from './high-scores/high-scores.component';
+import { FormsModule } from '@angular/forms';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        FormsModule
       ],
       declarations: [
         AppComponent,
         TitleBarComponent,
-        HomeComponent
+        HomeComponent,
+        HighScoresComponent
       ],
       providers: [
         ElectronService

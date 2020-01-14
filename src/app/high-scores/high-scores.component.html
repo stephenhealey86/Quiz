@@ -1,4 +1,4 @@
-<table class="table table-striped" *ngIf="topHighScores?.length > 0 || newHighScore !== undefined">
+<table class="table table-striped" *ngIf="topHighScores?.length > 0 || newHighScore.highScore > 0">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -14,10 +14,12 @@
       <td>{{score.name}}</td>
       <td>{{score.date | date: 'd/M/yy'}}</td>
     </tr>
-    <tr *ngIf="newHighScore">
-    <td scope="row">{{newHighScoreIndex + 1}}</td>
+    <tr *ngIf="isHighScore()">
+      <td scope="row">
+        <label class="m-1">{{newHighScoreIndex + 1}}</label>
+      </td>
       <td>
-        <label class="m-1" for="name">{{newHighScore.highScore}}</label>
+        <label class="m-1">{{newHighScore.highScore}}</label>
       </td>
       <td>
         <input class="form-control m-1" name="name" #name="ngModel" type="text" [(ngModel)]="newHighScore.name" required maxlength="20" minlength="3">

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { HighScoreModel } from '../models/high-score-model';
+import { AppSettingsService } from '../Services/app-settings.service';
 
 @Component({
   selector: 'app-high-scores',
@@ -8,44 +9,77 @@ import { HighScoreModel } from '../models/high-score-model';
 })
 export class HighScoresComponent implements OnInit {
 
-  @Input() highScores: Array<HighScoreModel>;
-  private newHighScoreValue: HighScoreModel;
-  @Input() set newHighScore(value: HighScoreModel) {
-    if (value !== undefined && value !== null) {
-      this.newHighScoreValue = value;
+  @Input() score: number;
+
+  private get highScores(): Array<HighScoreModel> {
+    return this.settingsService.appSettings.highScores.sort((a, b) => (a.highScore > b.highScore) ? -1 : 1);
+  }
+
+  newHighScore = {} as HighScoreModel;
+  topHighScores = [] as Array<HighScoreModel>;
+  bottomHighScores = [] as Array<HighScoreModel>;
+  newHighScoreIndex: number;
+
+
+  constructor(private settingsService: AppSettingsService) { }
+
+  ngOnInit() {
+    this.initialiseTable();
+  }
+
+  initialiseTable(): void {
+    this.newHighScore.highScore = this.score;
+    this.newHighScore.date = new Date(Date.now());
+    if (this.isHighScore()) {
+      this.newHighScoreIndex = this.highScores.length;
       for (let i = 0; i < this.highScores.length; i++) {
-        if (value.highScore > this.highScores[i].highScore) {
+        if (this.score > this.highScores[i].highScore) {
           this.newHighScoreIndex = i;
           break;
         }
       }
+      // this.newHighScoreIndex = this.highScores.length === 1 ? 0 : this.newHighScoreIndex;
       this.topHighScores = this.highScores.slice(0, this.newHighScoreIndex);
       this.bottomHighScores = this.highScores.slice(this.newHighScoreIndex, this.highScores.length);
-      if (this.highScores.length >= 10) {
-        this.bottomHighScores.pop();
-      }
     } else {
       this.topHighScores = this.highScores;
+      this.bottomHighScores = [];
+      this.newHighScoreIndex = this.topHighScores.length;
     }
-  }
-  get newHighScore(): HighScoreModel {
-    return this.newHighScoreValue;
-  }
-  @Output() saveScore = new EventEmitter();
-
-  topHighScores: Array<HighScoreModel>;
-  bottomHighScores: Array<HighScoreModel>;
-  newHighScoreIndex = 1;
-
-
-  constructor() { }
-
-  ngOnInit() {
   }
 
   saveHighScore(): void {
-    this.newHighScoreIndex = null;
-    this.saveScore.emit(true);
+    if (this.isHighScore()) {
+      const HIGH_SCORES = this.settingsService.appSettings.highScores;
+      HIGH_SCORES.push(this.newHighScore);
+      HIGH_SCORES.sort((a, b) => (a.highScore > b.highScore) ? -1 : 1);
+      for (let i = 0; i < HIGH_SCORES.length; i++) {
+        if (i > 9) {
+          HIGH_SCORES.pop();
+        }
+      }
+      this.settingsService.saveAppSettings();
+      this.score = 0;
+      this.topHighScores = this.highScores;
+      this.bottomHighScores = [];
+      this.newHighScoreIndex = this.topHighScores.length;
+    }
+  }
+
+  isHighScore(): boolean {
+    if (this.score > 0) {
+      if (this.highScores.length > 9) {
+        // tslint:disable-next-line:prefer-for-of
+        for (let i = 0; i < this.highScores.length; i++) {
+          if (this.score > this.highScores[i].highScore) {
+            return true;
+          }
+        }
+        return false;
+      }
+      return true;
+    }
+    return false;
   }
 
 }

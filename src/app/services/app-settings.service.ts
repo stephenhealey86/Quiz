@@ -31,13 +31,13 @@ getAppSettings(): void {
     this.appSettings = this.getWebAppSettings();
   }
   if (this.appIsNewVersion()) {
-    if (this.appSettings.highScores) {
+    if (this.appSettings.highScores !== null && this.appSettings.highScores !== undefined) {
       const HIGH_SCORES = this.appSettings.highScores;
       this.clearAppSettings();
-      this.seedSettings(HIGH_SCORES);
+      this.appSettings = this.seedSettings(HIGH_SCORES);
     } else {
       this.clearAppSettings();
-      this.seedSettings();
+      this.appSettings = this.seedSettings();
     }
     this.saveAppSettings();
   }

@@ -8,6 +8,8 @@ import { QuestionService } from '../services/question.service';
 import { AppSettingsService } from '../Services/app-settings.service';
 import { ElectronService } from 'ngx-electron';
 import { HttpClientModule } from '@angular/common/http';
+import { HighScoresComponent } from '../high-scores/high-scores.component';
+import { FormsModule } from '@angular/forms';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -16,7 +18,8 @@ describe('HomeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        HomeComponent
+        HomeComponent,
+        HighScoresComponent
       ],
       providers: [
         ElectronService,
@@ -24,7 +27,8 @@ describe('HomeComponent', () => {
         QuestionService,
       ],
       imports: [
-        HttpClientModule
+        HttpClientModule,
+        FormsModule
      ]
     })
     .compileComponents();

@@ -27,14 +27,9 @@ export class HomeComponent implements OnInit {
   private concurrentCorrectAnswers = 0;
   private numberOfWrongAnswersThisQuestion = 0;
   currentQuestion: QuizViewQuestion = null;
-  newHighScore: HighScoreModel;
   private currentQuestionIndex = 0;
   private get token(): string {
     return this.settingsService.appSettings.token;
-  }
-
-  get highScores(): Array<HighScoreModel> {
-    return this.settingsService.appSettings.highScores.sort((a, b) => (a.highScore > b.highScore) ? -1 : 1);
   }
 
   constructor(private settingsService: AppSettingsService, private questionService: QuestionService) { }
@@ -280,7 +275,6 @@ export class HomeComponent implements OnInit {
       }, 1000);
     }
     this.score += ((5 - this.numberOfWrongAnswersThisQuestion) + (this.concurrentCorrectAnswers * 5));
-    console.log(this.score);
   }
 
   start(): void {
@@ -289,7 +283,6 @@ export class HomeComponent implements OnInit {
     this.numberOfWrongAnswersThisQuestion = 0;
     this.time = this.gameLengthInSeconds;
     this.score = 0;
-    this.newHighScore = undefined;
     this.started = true;
     this.timesUp = false;
     this.timerId = setInterval(() => {
@@ -306,43 +299,5 @@ export class HomeComponent implements OnInit {
     this.currentQuestionIndex++;
     this.timesUp = true;
     this.time = 0;
-    if (this.isHighScore(this.score)) {
-      this.newHighScore = {
-        highScore: this.score,
-        date: new Date(Date.now()),
-        name: null
-      };
-    }
   }
-
-  isHighScore(score: number): boolean {
-    if (this.score > 0) {
-      if (this.highScores.length > 9) {
-        this.highScores.forEach(highScore => {
-          if (score > highScore.highScore) {
-            return true;
-          }
-        });
-        return false;
-      }
-      return true;
-    }
-    return false;
-  }
-
-  saveHighScore(): void {
-    if (this.newHighScore.name !== null) {
-      const HIGH_SCORES = this.settingsService.appSettings.highScores;
-      HIGH_SCORES.push(this.newHighScore);
-      this.newHighScore = null;
-      HIGH_SCORES.sort(s => s.highScore);
-      for (let i = 0; i < HIGH_SCORES.length; i++) {
-        if (i >= 9) {
-          HIGH_SCORES.pop();
-        }
-      }
-      this.settingsService.saveAppSettings();
-    }
-  }
-
 }

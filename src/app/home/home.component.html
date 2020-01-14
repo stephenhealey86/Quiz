@@ -21,12 +21,12 @@
     </div>
 
     <!-- Start screen -->
-    <div *ngIf="(!started || timesUp) && currentQuestion" class="d-flex flex-column justify-content-around align-items-center m-5">
+    <div *ngIf="(!started || timesUp) && currentQuestion" class="d-flex flex-column justify-content-around align-items-center m-2">
       <span id="highScore" class="d-flex">
-        <app-high-scores [newHighScore]="newHighScore" [highScores]="highScores" (saveScore)="saveHighScore()"></app-high-scores>
+        <app-high-scores [score]="score"></app-high-scores>
       </span>
-    <button class="btn btn-success p-5" *ngIf="!timesUp" (click)="start()"><i class="fas fa-play"></i></button>
-    <button class="btn btn-success p-5" *ngIf="timesUp" (click)="start()"><i class="fas fa-reply"></i></button>
+    <button class="btn btn-success py-2 px-5" *ngIf="!timesUp" (click)="start()"><i class="fas fa-play"></i></button>
+    <button class="btn btn-success py-2 px-5" *ngIf="timesUp" (click)="start()"><i class="fas fa-reply"></i></button>
     </div>
 
     <div *ngIf="started && currentQuestion && !timesUp">
