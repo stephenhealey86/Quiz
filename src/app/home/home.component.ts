@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   score = 0;
   time = 0;
   timerId: any;
-  private gameLengthInSeconds = 10;
+  private gameLengthInSeconds = 60;
   timesUp = false;
   buttonsAreLocked = false;
   informationMessage: string = null;
