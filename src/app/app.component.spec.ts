@@ -6,13 +6,15 @@ import { TitleBarComponent } from './title-bar/title-bar.component';
 import { ElectronService } from 'ngx-electron';
 import { HighScoresComponent } from './high-scores/high-scores.component';
 import { FormsModule } from '@angular/forms';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        FormsModule
+        FormsModule,
+        TooltipModule.forRoot()
       ],
       declarations: [
         AppComponent,

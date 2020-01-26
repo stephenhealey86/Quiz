@@ -15,6 +15,7 @@ export class QuestionService {
 private tokenUrl = environment.quizApiTokenUrl;
 private questionUrl = environment.quizApiQuestionsUrl;
 private caegoryUrl = environment.quizApiCategoryUrl;
+private countGloablUrl = environment.quizApiCountGloablUrl;
 
 constructor(private http: HttpClient) { }
 
@@ -35,6 +36,10 @@ getQuestions(token: string, category?: QuizApiCategory): Observable<QuizApiModel
 
 getCategories(): Observable<QuizApiTriviaCategories> {
   return this.http.get<QuizApiTriviaCategories>(this.caegoryUrl);
+}
+
+getCountGlobal(): Observable<any> {
+  return this.http.get<any>(this.countGloablUrl);
 }
 
 }

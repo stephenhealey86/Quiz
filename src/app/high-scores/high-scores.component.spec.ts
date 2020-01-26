@@ -7,6 +7,8 @@ import { HighScoresComponent } from './high-scores.component';
 import { FormsModule } from '@angular/forms';
 import { AppSettingsService } from '../Services/app-settings.service';
 import { ElectronService } from 'ngx-electron';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
 
 describe('HighScoresComponent', () => {
   let component: HighScoresComponent;
@@ -19,7 +21,8 @@ describe('HighScoresComponent', () => {
         HighScoresComponent
       ],
       imports: [
-        FormsModule
+        FormsModule,
+        TooltipModule.forRoot()
      ],
      providers: [
       ElectronService,

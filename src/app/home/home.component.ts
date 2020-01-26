@@ -6,6 +6,7 @@ import { QuizApiQuestion } from '../models/quiz-api-question';
 import { QuizViewQuestion } from '../models/quiz-view-question';
 import { QuizViewAnswer } from '../models/quiz-view-answer';
 import { QuizApiCategory } from '../models/quiz-api-category';
+import { QuizApiTriviaCategories } from '../models/quiz-api-trivia-categories';
 
 @Component({
   selector: 'app-home',
@@ -316,7 +317,8 @@ export class HomeComponent implements OnInit {
         id: 0,
         name: 'Random'
       });
-      this.categories.push(...res.trivia_categories);
+      this.getCountGlobal(res);
+      // this.categories.push(...res.trivia_categories);
       this.getToken();
     }, err => {
       console.log('Get Categories Error');
@@ -326,6 +328,27 @@ export class HomeComponent implements OnInit {
       this.getCategories();
     }, 5000);
     });
+  }
+
+  private getCountGlobal(categories: QuizApiTriviaCategories): void {
+    this.questionService.getCountGlobal()
+      .subscribe(res => {
+        categories.trivia_categories.forEach((category) => {
+          // Find category in result
+          if (res.categories[category.id].total_num_of_questions > 100) {
+            console.log(res.categories[category.id].total_num_of_questions);
+            this.categories.push(category);
+          }
+        });
+        console.log(res);
+      }, err => {
+        console.log('Get Count Global Error');
+        console.log(err);
+        setTimeout(() => {
+        this.informationMessage = 'Problem with internet. Re-trying';
+        this.getCountGlobal(categories);
+      }, 5000);
+      });
   }
 
   public onSelectCategory(index: number): void {

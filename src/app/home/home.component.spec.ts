@@ -10,6 +10,7 @@ import { ElectronService } from 'ngx-electron';
 import { HttpClientModule } from '@angular/common/http';
 import { HighScoresComponent } from '../high-scores/high-scores.component';
 import { FormsModule } from '@angular/forms';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -28,7 +29,8 @@ describe('HomeComponent', () => {
       ],
       imports: [
         HttpClientModule,
-        FormsModule
+        FormsModule,
+        TooltipModule.forRoot()
      ]
     })
     .compileComponents();
