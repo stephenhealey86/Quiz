@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { AppCommsService } from './services/app-comms.service';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
    providers: [
       ElectronService,
       AppSettingsService,
-      QuestionService
+      QuestionService,
+      AppCommsService
    ],
    bootstrap: [
       AppComponent

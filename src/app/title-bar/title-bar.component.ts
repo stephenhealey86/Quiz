@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter, NgZone } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { environment } from 'src/environments/environment';
 import { AppSettingsService } from '../Services/app-settings.service';
+import { AppCommsService } from '../services/app-comms.service';
 
 @Component({
   selector: 'app-title-bar',
@@ -19,7 +20,8 @@ export class TitleBarComponent implements OnInit {
   window = {} as Electron.BrowserWindow;
   //#endregion
 
-  constructor(private electronService: ElectronService, private settings: AppSettingsService, private zone: NgZone) { }
+  constructor(private electronService: ElectronService, private settings: AppSettingsService,
+              private zone: NgZone, public commsService: AppCommsService) { }
 
   ngOnInit() {
     if (this.isRunningInElectron()) {
@@ -102,5 +104,10 @@ export class TitleBarComponent implements OnInit {
     } else {
       console.log('Minimize window.');
     }
+  }
+
+  restartGame(): void {
+    this.commsService.flags.titleBarStopBtnPressed = true;
+    this.commsService.UpdateState();
   }
 }

@@ -7,6 +7,7 @@ import { QuizViewQuestion } from '../models/quiz-view-question';
 import { QuizViewAnswer } from '../models/quiz-view-answer';
 import { QuizApiCategory } from '../models/quiz-api-category';
 import { QuizApiTriviaCategories } from '../models/quiz-api-trivia-categories';
+import { AppCommsService } from '../services/app-comms.service';
 
 @Component({
   selector: 'app-home',
@@ -35,9 +36,16 @@ export class HomeComponent implements OnInit {
     return this.settingsService.appSettings.token;
   }
 
-  constructor(private settingsService: AppSettingsService, private questionService: QuestionService) { }
+  constructor(private settingsService: AppSettingsService, private questionService: QuestionService,
+              private commsService: AppCommsService) { }
 
   ngOnInit() {
+    this.commsService.AddEventListner(() => {
+      if (this.commsService.flags.titleBarStopBtnPressed) {
+        this.restart();
+        this.commsService.flags.titleBarStopBtnPressed = false;
+      }
+    });
     this.initaliseBackground();
     this.settingsService.getAppSettings();
     this.getCategories();
@@ -287,6 +295,7 @@ export class HomeComponent implements OnInit {
   }
 
   start(): void {
+    this.commsService.flags.gameStarted = true;
     this.getCurrentQuestion();
     this.concurrentCorrectAnswers = 0;
     this.numberOfWrongAnswersThisQuestion = 0;
@@ -304,6 +313,11 @@ export class HomeComponent implements OnInit {
       this.time--;
       return;
     }
+    this.restart();
+  }
+
+  restart(): void {
+    this.commsService.flags.gameStarted = false;
     clearInterval(this.timerId);
     this.currentQuestionIndex++;
     this.timesUp = true;
@@ -336,11 +350,9 @@ export class HomeComponent implements OnInit {
         categories.trivia_categories.forEach((category) => {
           // Find category in result
           if (res.categories[category.id].total_num_of_questions > 100) {
-            console.log(res.categories[category.id].total_num_of_questions);
             this.categories.push(category);
           }
         });
-        console.log(res);
       }, err => {
         console.log('Get Count Global Error');
         console.log(err);
