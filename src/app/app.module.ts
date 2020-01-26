@@ -11,6 +11,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { QuestionService } from './services/question.service';
 import { HighScoresComponent } from './high-scores/high-scores.component';
 import { FormsModule } from '@angular/forms';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 
 @NgModule({
@@ -24,7 +27,10 @@ import { FormsModule } from '@angular/forms';
       BrowserModule,
       HttpClientModule,
       AppRoutingModule,
-      FormsModule
+      FormsModule,
+      BsDropdownModule.forRoot(),
+      BrowserAnimationsModule,
+      TooltipModule.forRoot()
    ],
    providers: [
       ElectronService,

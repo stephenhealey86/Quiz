@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { QuestionService } from '../services/question.service';
 import { AppSettingsService } from '../Services/app-settings.service';
 import { throwError } from 'rxjs';
 import { QuizApiQuestion } from '../models/quiz-api-question';
 import { QuizViewQuestion } from '../models/quiz-view-question';
 import { QuizViewAnswer } from '../models/quiz-view-answer';
-import { HighScoreModel } from '../models/high-score-model';
+import { QuizApiCategory } from '../models/quiz-api-category';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +17,8 @@ export class HomeComponent implements OnInit {
   backgroundTile = [];
   started = false;
   questions: Array<QuizApiQuestion> = [];
+  categories: Array<QuizApiCategory> = [];
+  selectedCategory = 0;
   score = 0;
   time = 0;
   timerId: any;
@@ -37,7 +39,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.initaliseBackground();
     this.settingsService.getAppSettings();
-    this.getToken();
+    this.getCategories();
   }
 
   getFormattedTime(): string {
@@ -76,7 +78,9 @@ export class HomeComponent implements OnInit {
       .subscribe(res => {
         if (res.response_code === 0) {
           this.settingsService.appSettings.token = res.token;
-          this.getQuestions();
+          if (this.started) {
+            this.getQuestions();
+          }
           return;
         }
         this.getNewToken();
@@ -92,7 +96,9 @@ export class HomeComponent implements OnInit {
       .subscribe(res => {
         if (res.response_code === 0) {
           this.settingsService.appSettings.token = res.token;
-          this.getQuestions();
+          if (this.started) {
+            this.getQuestions();
+          }
           return;
         }
         throwError('Invalid');
@@ -108,15 +114,17 @@ export class HomeComponent implements OnInit {
 
   private getQuestions(): void {
     if (this.token) {
-      this.questionService.getQuestions(this.token)
+      const category = this.selectedCategory > 0 ? this.categories[this.selectedCategory] : null;
+      this.questionService.getQuestions(this.token, category)
         .subscribe(res => {
           if (res.response_code === 0) {
             this.questions = res.results;
             this.currentQuestionIndex = 0;
             this.currentQuestion = this.calculateQuestion();
             return;
+          } else {
+            this.getToken();
           }
-          console.log(res.response_code);
         }, err => {
           console.log('Get Questions Error');
           console.log(err);
@@ -299,5 +307,30 @@ export class HomeComponent implements OnInit {
     this.currentQuestionIndex++;
     this.timesUp = true;
     this.time = 0;
+  }
+
+  private getCategories(): void {
+    this.questionService.getCategories()
+    .subscribe(res => {
+      this.categories.push({
+        id: 0,
+        name: 'Random'
+      });
+      this.categories.push(...res.trivia_categories);
+      this.getToken();
+    }, err => {
+      console.log('Get Categories Error');
+      console.log(err);
+      setTimeout(() => {
+      this.informationMessage = 'Problem with internet. Re-trying';
+      this.getCategories();
+    }, 5000);
+    });
+  }
+
+  public onSelectCategory(index: number): void {
+    this.selectedCategory = index;
+    this.getQuestions();
+    this.start();
   }
 }

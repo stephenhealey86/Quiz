@@ -1,10 +1,14 @@
 <div style="height: 100%;" class="d-flex flex-column justify-content-center">
 
+  <!-- Stats Frame -->
   <div id="statsFrame" *ngIf="started && currentQuestion && !timesUp" class="d-flex justify-content-between">
+
+    <!-- Score -->
     <span id="score" class="d-flex px-2">
       <p class="m-1">Score:</p>
       <p class="m-1">{{score}}</p>
     </span>
+    <!-- Timer -->
     <span id="timer" class="d-flex px-2">
       <p class="m-1">Time:</p>
       <p id="timerValue" class="m-1">{{getFormattedTime()}}</p>
@@ -12,8 +16,9 @@
   </div>
 
   <div id="questionFrame">
+
     <!-- Loading screen -->
-    <div *ngIf="currentQuestion === null" class="d-flex flex-column justify-content-center align-items-center">
+    <div *ngIf="((started && currentQuestion === null) || !(categories.length > 0)) && !timesUp" class="d-flex flex-column justify-content-center align-items-center">
       <i class="fas fa-spinner m-5"></i>
       <span id="information" *ngIf="informationMessage">
         <p class="m-1">{{informationMessage}}</p>
@@ -21,12 +26,31 @@
     </div>
 
     <!-- Start screen -->
-    <div *ngIf="(!started || timesUp) && currentQuestion" class="d-flex flex-column justify-content-around align-items-center m-2">
-      <span id="highScore" class="d-flex">
-        <app-high-scores [score]="score"></app-high-scores>
-      </span>
-    <button class="btn btn-success py-2 px-5" *ngIf="!timesUp" (click)="start()"><i class="fas fa-play"></i></button>
-    <button class="btn btn-success py-2 px-5" *ngIf="timesUp" (click)="start()"><i class="fas fa-reply"></i></button>
+    <div *ngIf="(!started || timesUp) && categories.length > 0" class="d-flex flex-column justify-content-around align-items-center m-2">
+
+      <div class="container">
+        <div class="row justify-content-center">
+          <!-- Category -->
+          <div id="category" class="btn-group form-control w-75" dropdown>
+            <label style="white-space: nowrap;">Category :</label>
+            <button id="button-animated" dropdownToggle type="button" class="dropdown-toggle"
+                    aria-controls="dropdown-animated">
+                    <span class="flex-grow-1">{{categories.length > 0 && selectedCategory >= 0 ? categories[selectedCategory].name + '\t' : 'Select category\t'}}</span><span class="caret"></span>
+            </button>
+            <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu"
+                role="menu" aria-labelledby="button-animated">
+              <li (click)="onSelectCategory(i)" *ngFor="let category of categories; let i = index;" role="menuitem"><span class="dropdown-item">{{category.name}}</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <!-- High Scores -->
+          <span id="highScore" class="w-75">
+            <app-high-scores [score]="score"></app-high-scores>
+          </span>
+        </div>
+      </div>
+
     </div>
 
     <div *ngIf="started && currentQuestion && !timesUp">

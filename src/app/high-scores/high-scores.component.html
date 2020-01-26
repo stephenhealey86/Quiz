@@ -11,7 +11,7 @@
     <tr *ngFor="let score of topHighScores; let i = index;">
       <th scope="row">{{i + 1}}</th>
       <td>{{score.highScore}}</td>
-      <td>{{score.name}}</td>
+      <td [tooltip]="score.name.length > 20 ? score.name : null" [delay]="750">{{score.name.length > 20 ? (score.name | slice:0:17) + '...' : score.name}}</td>
       <td>{{score.date | date: 'd/M/yy'}}</td>
     </tr>
     <tr *ngIf="isHighScore()">
