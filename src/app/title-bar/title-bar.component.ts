@@ -12,6 +12,7 @@ import { AppCommsService } from '../services/app-comms.service';
 export class TitleBarComponent implements OnInit {
 
   //#region Variables
+  title = 'Quiz';
   // Emits windowIsMaximized
   @Output() windowState = new EventEmitter();
   // True is window is maximized

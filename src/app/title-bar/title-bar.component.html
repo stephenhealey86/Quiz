@@ -1,20 +1,20 @@
 <nav [ngClass]="{'TopCornersRounded': !windowIsMaximised}" class="windows-title">
   <div class="d-flex w-100 align-items-center">
     <span class="d-flex win-btn-grp">
-      <button [ngClass]="{'invisible': !commsService.flags.gameStarted}" (click)="restartGame()" class="btn-windows"><i class="fas fa-reply"></i></button>
+      <button id="restartButton" [ngClass]="{'invisible': !commsService.flags.gameStarted}" (click)="restartGame()" class="btn-windows"><i class="fas fa-reply"></i></button>
       <button class="invisible btn-windows"></button>
       <button class="invisible btn-windows"><i class="fas fa-window-close"></i></button>
     </span>
     <span style="transform: translateY(4px);" class="w-100 text-center">
-      <p class="m-0">Quiz</p>
+    <p id="title" class="m-0">{{title}}</p>
     </span>
     <span class="d-flex win-btn-grp">
-      <button (click)="minWindow()" class="btn-windows"><i class="fas fa-window-minimize"></i></button>
-      <button (click)="maxWindow()" class="btn-windows">
+      <button id="minWindowBtn" (click)="minWindow()" class="btn-windows"><i class="fas fa-window-minimize"></i></button>
+      <button id="maxWindowBtn" (click)="maxWindow()" class="btn-windows">
         <i *ngIf="windowIsMaximised" class="fas fa-window-restore"></i>
         <i *ngIf="!windowIsMaximised" class="fas fa-window-maximize"></i>
       </button>
-      <button (click)="closeWindow()" class="btn-windows-close"><i class="fas fa-window-close"></i></button>
+      <button id="closeWindowBtn" (click)="closeWindow()" class="btn-windows-close"><i class="fas fa-window-close"></i></button>
     </span>
   </div>
 </nav>

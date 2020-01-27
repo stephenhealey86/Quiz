@@ -14,6 +14,7 @@ describe('HighScoresComponent', () => {
   let component: HighScoresComponent;
   let fixture: ComponentFixture<HighScoresComponent>;
   let service: AppSettingsService;
+  let de: DebugElement;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -92,6 +93,7 @@ describe('HighScoresComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(HighScoresComponent);
     component = fixture.componentInstance;
+    de = fixture.debugElement;
     fixture.detectChanges();
   });
 
@@ -139,5 +141,18 @@ describe('HighScoresComponent', () => {
     component.score = 11;
     // Assert & Act
     expect(component.isHighScore()).toBeTruthy();
+  });
+
+  it('table headers should be, #, Score, Name, Date', () => {
+    // Arrange
+    const ROW_ONE = de.query(By.css('thead > tr > th:nth-child(1)'));
+    const ROW_TWO = de.query(By.css('thead > tr > th:nth-child(2)'));
+    const ROW_THREE = de.query(By.css('thead > tr > th:nth-child(3)'));
+    const ROW_FOUR = de.query(By.css('thead > tr > th:nth-child(4)'));
+    // Act & Assert
+    expect(ROW_ONE.nativeElement.innerText).toEqual('#');
+    expect(ROW_TWO.nativeElement.innerText).toEqual('Score');
+    expect(ROW_THREE.nativeElement.innerText).toEqual('Name');
+    expect(ROW_FOUR.nativeElement.innerText).toEqual('Date');
   });
 });

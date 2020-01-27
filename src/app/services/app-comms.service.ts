@@ -11,6 +11,7 @@ export class AppCommsService {
 
 constructor() {
   this.flags.titleBarStopBtnPressed = false;
+  this.flags.gameStarted = false;
 }
 
   UpdateState(): void {
