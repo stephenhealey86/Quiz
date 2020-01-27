@@ -1,5 +1,5 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync, inject } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
@@ -11,10 +11,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { HighScoresComponent } from '../high-scores/high-scores.component';
 import { FormsModule } from '@angular/forms';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { AppCommsService } from '../services/app-comms.service';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
+  let de: DebugElement;
+  let commsService: AppCommsService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -39,8 +42,13 @@ describe('HomeComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
+    de = fixture.debugElement;
     fixture.detectChanges();
   });
+
+  beforeEach(inject([AppCommsService], (service: AppCommsService) => {
+    commsService = service;
+  }));
 
   afterEach(() => {
     if (fixture.nativeElement && 'remove' in fixture.nativeElement) {
@@ -69,5 +77,40 @@ describe('HomeComponent', () => {
     component.time = null;
     // Act & Assert
     expect(component.getFormattedTime()).toEqual('00');
+  });
+
+  it('restart() should reinitialise variables', fakeAsync(() => {
+    // Arrange
+    component.start();
+    // Act
+    tick(2000);
+    // Assert
+    expect(commsService.flags.gameStarted).toBeTruthy();
+    expect(component.timesUp).toBeFalsy();
+    expect(component.time).toEqual(58);
+    // Act
+    component.restart();
+    // Assert
+    expect(commsService.flags.gameStarted).toBeFalsy();
+    expect(component.timesUp).toBeTruthy();
+    expect(component.time).toEqual(0);
+  }));
+
+  it('loading screen should be active', () => {
+    // Arrange & Act
+    component.start();
+    // Assert
+    expect(component.timesUp).toBeFalsy();
+    expect(component.currentQuestion).toBeNull();
+    expect(de.query(By.css('.fa-spinner'))).toBeTruthy();
+  });
+
+  it('loading screen should not be active', () => {
+    // Arrange & Act
+    component.restart();
+    fixture.detectChanges();
+    // Assert
+    expect(component.timesUp).toBeTruthy();
+    expect(de.query(By.css('.fa-spinner'))).toBeFalsy();
   });
 });
