@@ -41,3 +41,7 @@
 .win-btn-grp > button > i {
     vertical-align: middle;
 }
+
+#restartButton {
+    color: var(--md-primary-background);
+}

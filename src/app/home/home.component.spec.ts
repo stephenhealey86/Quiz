@@ -1,5 +1,5 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed, tick, fakeAsync, inject } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync, inject, discardPeriodicTasks } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
@@ -78,6 +78,25 @@ describe('HomeComponent', () => {
     // Act & Assert
     expect(component.getFormattedTime()).toEqual('00');
   });
+
+  it('start() should start game and set variables', fakeAsync(() => {
+    // Arrange
+    component.informationMessage = 'Test';
+    component.time = 0;
+    component.score = 10;
+    component.started = false;
+    component.timesUp = true;
+    // Act
+    component.start();
+    tick(20000);
+    // Assert
+    expect(component.informationMessage).toBeNull();
+    expect(component.time).toEqual(40);
+    expect(component.score).toEqual(0);
+    expect(component.started).toBeTruthy();
+    expect(component.timesUp).toBeFalsy();
+    discardPeriodicTasks();
+  }));
 
   it('restart() should reinitialise variables', fakeAsync(() => {
     // Arrange
