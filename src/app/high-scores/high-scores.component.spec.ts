@@ -113,8 +113,19 @@ describe('HighScoresComponent', () => {
     // Act
     component.initialiseTable();
     // Assert
+    expect(service.appSettings.highScores.length).toEqual(10);
     expect(component.topHighScores.length).toEqual(5);
-    expect(component.bottomHighScores.length).toEqual(5);
+    expect(component.bottomHighScores.length).toEqual(4);
+    expect(component.newHighScoreIndex).toEqual(5);
+    // Arrange
+    component.score = 52;
+    service.appSettings.highScores.pop();
+    // Act
+    component.initialiseTable();
+    // Assert
+    expect(service.appSettings.highScores.length).toEqual(9);
+    expect(component.topHighScores.length).toEqual(5);
+    expect(component.bottomHighScores.length).toEqual(4);
     expect(component.newHighScoreIndex).toEqual(5);
   });
 

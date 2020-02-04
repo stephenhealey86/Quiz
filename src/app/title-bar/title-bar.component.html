@@ -2,6 +2,7 @@
   <div class="d-flex w-100 align-items-center">
     <span class="d-flex win-btn-grp">
       <button id="restartButton" [ngClass]="{'invisible': !commsService.flags.gameStarted}" (click)="restartGame()" class="btn-windows"><i class="fas fa-reply"></i></button>
+    <p style="transform: translate(-20px, 4px); width: 0;" class="text-nowrap m-0" *ngIf="!commsService.flags.gameStarted && commsService.flags.score > 0">Score: {{commsService.flags.score}}</p>
       <button class="invisible btn-windows"></button>
       <button class="invisible btn-windows"><i class="fas fa-window-close"></i></button>
     </span>

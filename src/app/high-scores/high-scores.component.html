@@ -1,6 +1,6 @@
 <table class="table table-striped" *ngIf="topHighScores?.length > 0 || newHighScore.highScore > 0">
   <thead>
-    <tr>
+    <tr scope="row">
       <th scope="col">#</th>
       <th scope="col">Score</th>
       <th scope="col">Name</th>
@@ -8,14 +8,14 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let score of topHighScores; let i = index;">
-      <th scope="row">{{i + 1}}</th>
+    <tr scope="row" *ngFor="let score of topHighScores; let i = index;">
+      <td>{{i + 1}}</td>
       <td>{{score.highScore}}</td>
       <td [tooltip]="score.name.length > 20 ? score.name : null" [delay]="750">{{score.name.length > 20 ? (score.name | slice:0:17) + '...' : score.name}}</td>
       <td>{{score.date | date: 'd/M/yy'}}</td>
     </tr>
-    <tr *ngIf="isHighScore()">
-      <td scope="row">
+    <tr scope="row" *ngIf="isHighScore()">
+      <td>
         <label class="m-1">{{newHighScoreIndex + 1}}</label>
       </td>
       <td>
@@ -28,8 +28,8 @@
         <button (click)="saveHighScore()" class="btn btn-success m-1">Save</button>
       </td>
     </tr>
-    <tr *ngFor="let score of bottomHighScores; let i = index;">
-      <th scope="row">{{i + newHighScoreIndex + 2}}</th>
+    <tr scope="row" *ngFor="let score of bottomHighScores; let i = index;">
+      <td>{{i + newHighScoreIndex + 2}}</td>
       <td>{{score.highScore}}</td>
       <td>{{score.name}}</td>
       <td>{{score.date | date: 'd/M/yy'}}</td>

@@ -128,6 +128,7 @@ export class HomeComponent implements OnInit {
         .subscribe(res => {
           if (res.response_code === 0) {
             this.questions = res.results;
+            shuffle(this.questions);
             this.currentQuestionIndex = 0;
             this.currentQuestion = this.calculateQuestion();
             return;
@@ -142,6 +143,12 @@ export class HomeComponent implements OnInit {
           this.getQuestions();
         }, 5000);
         });
+    }
+    function shuffle(array: Array<QuizApiQuestion>) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
     }
   }
 
@@ -318,11 +325,13 @@ export class HomeComponent implements OnInit {
   }
 
   restart(): void {
+    this.currentQuestion = null;
     this.commsService.flags.gameStarted = false;
     clearInterval(this.timerId);
     this.currentQuestionIndex++;
     this.timesUp = true;
     this.time = 0;
+    this.commsService.flags.score = this.score;
   }
 
   private getCategories(): void {
@@ -367,6 +376,7 @@ export class HomeComponent implements OnInit {
   public onSelectCategory(index: number): void {
     this.selectedCategory = index;
     this.getQuestions();
+    this.currentQuestion = null;
     this.start();
   }
 }

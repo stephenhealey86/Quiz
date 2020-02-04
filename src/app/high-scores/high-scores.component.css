@@ -7,6 +7,10 @@ table {
     padding: .5rem;
 }
 
+#lowScore {
+    color: var(--md-primary-background);
+}
+
 /* Responsivness */
 
 @media screen and (max-height: 500px) {

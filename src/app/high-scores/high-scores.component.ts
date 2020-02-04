@@ -38,9 +38,9 @@ export class HighScoresComponent implements OnInit {
           break;
         }
       }
-      // this.newHighScoreIndex = this.highScores.length === 1 ? 0 : this.newHighScoreIndex;
       this.topHighScores = this.highScores.slice(0, this.newHighScoreIndex);
-      this.bottomHighScores = this.highScores.slice(this.newHighScoreIndex, this.highScores.length);
+      const END_OF_ARRAY = this.highScores.length > 9 ? this.highScores.length - 1 : this.highScores.length;
+      this.bottomHighScores = this.highScores.slice(this.newHighScoreIndex, END_OF_ARRAY);
     } else {
       this.topHighScores = this.highScores;
       this.bottomHighScores = [];
