@@ -304,7 +304,6 @@ export class HomeComponent implements OnInit {
   start(): void {
     this.informationMessage = null;
     this.commsService.flags.gameStarted = true;
-    this.getCurrentQuestion();
     this.concurrentCorrectAnswers = 0;
     this.numberOfWrongAnswersThisQuestion = 0;
     this.time = this.gameLengthInSeconds;
