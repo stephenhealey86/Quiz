@@ -1,27 +1,22 @@
 # Quiz
+![Alt text](Deployment/screenshot.png "Quiz Demo")
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.14.
+# Summary
+Multiple choice quiz general knowledge quiz game. Beat the clock to set a high score.
+Lots of categories to choose from.
+# Getting Started
+There are two ways you can get the application.
+* Download the application from the [windows store.](https://www.microsoft.com/store/apps/9NJNHSSL77KH)
+* Download the application from the release section, unzip and run the Quiz.exe
+* Download the project source code and build it yourself. Run npm package-app-64 in your console for a x64 build.
 
-## Development server
+# Versions
+## V1.3.1
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+* Multiple choice quiz
+* Category selection
+* General knowledge
+* Store high scores
+* Restart game
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+![Alt text](Deployment/category.png "Quiz Demo")
