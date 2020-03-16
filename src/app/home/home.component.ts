@@ -139,7 +139,7 @@ export class HomeComponent implements OnInit {
           console.log('Get Questions Error');
           console.log(err);
           setTimeout(() => {
-          this.informationMessage = 'Problem with internet. Re-trying';
+          this.informationMessage = 'Problem with internet. Re-trying.';
           this.getQuestions();
         }, 5000);
         });
@@ -358,7 +358,7 @@ export class HomeComponent implements OnInit {
       .subscribe(res => {
         categories.trivia_categories.forEach((category) => {
           // Find category in result
-          if (res.categories[category.id].total_num_of_questions > 100) {
+          if (res.categories[category.id].total_num_of_verified_questions > 100) {
             this.categories.push(category);
           }
         });
