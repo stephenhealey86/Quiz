@@ -1,6 +1,6 @@
 {
   "name": "quiz",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "main": "main.js",
   "scripts": {
     "ng": "ng",
@@ -12,7 +12,7 @@
     "electron": "ng build --prod && electron .",
     "package-app": "ng build --prod && electron-packager . Quiz --asar --icon ./src/assets/icon.ico",
     "package-app-admin": "ng build --prod && electron-packager . Quiz --asar --icon ./src/assets/icon.ico --win32metadata.requested-execution-level=\"requireAdministrator\"",
-    "windows-store": "electron-windows-store --input-directory C:\\Users\\Stephen\\Documents\\Dev\\Electron\\Quiz\\Quiz-win32-x64 --output-directory C:\\Users\\Stephen\\Documents\\Dev\\Electron\\Quiz\\windows-store --windows-kit \"C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\" --package-version 1.3.1.0 --identity-name 17880StephenHealey.Quiz --publisher CN=461968B2-0EE5-4F10-BBDA-3DFA5CE0B80E --package-name Quiz --package-display-name \"Quiz\" --publisher-display-name \"Stephen Healey\" --package-description \"Quiz app.\" --signtool-params /debug -a ./Resources --package-background-color #03a1fc"
+    "windows-store": "electron-windows-store --input-directory C:\\Users\\Stephen\\Documents\\Dev\\Electron\\Quiz\\Quiz-win32-x64 --output-directory C:\\Users\\Stephen\\Documents\\Dev\\Electron\\Quiz\\windows-store --windows-kit \"C:\\Program Files (x86)\\Windows Kits\\10\\App Certification Kit\" --package-version 1.3.2.0 --identity-name 17880StephenHealey.Quiz --publisher CN=461968B2-0EE5-4F10-BBDA-3DFA5CE0B80E --package-name Quiz --package-display-name \"Quiz\" --publisher-display-name \"Stephen Healey\" --package-description \"Quiz app.\" --signtool-params /debug -a ./Resources --package-background-color #03a1fc"
   },
   "private": true,
   "dependencies": {
